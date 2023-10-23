@@ -24,6 +24,12 @@ class DBStorage:
     __engine = None
     __session = None
 
+    def close(self):
+        '''
+        call remove() method on the private session attribute
+        '''
+        self.__session.remove()
+
     def __init__(self):
         """ Initializes the engine """
         user = environ.get("HBNB_MYSQL_USER")
