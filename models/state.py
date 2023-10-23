@@ -2,6 +2,7 @@
 """ State Module for HBNB project """
 from models.base_model import BaseModel
 from models.base_model import Base
+from models.city import City
 from os import environ
 
 from sqlalchemy import Column, String
@@ -19,17 +20,19 @@ class State(BaseModel, Base):
                               backref="state")
     else:
         name = ""
+        cities = []
 
-    @property
-    def cities(self):
-        """ Obtains the cities for a state """
-        from models import storage
+    if (environ.get("HBNB_TYPE_STORAGE", "fs") == "fs"):
+        @property
+        def cities(self):
+            """ Obtains the cities for a state """
+            from models import storage
 
-        my_cities = []
-        my_dict = storage.all(City)
+            my_cities = []
+            my_dict = storage.all(City)
 
-        for key, value in my_dict.items():
-            if (value.state.id == self.id):
-                my_cities.append(value)
+            for key, value in my_dict.items():
+                if (value.state_id == self.id):
+                    my_cities.append(value)
 
-        return (my_cities)
+            return (my_cities)
